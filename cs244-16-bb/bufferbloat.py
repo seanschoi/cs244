@@ -70,17 +70,37 @@ class BBTopo(Topo):
     "Simple topology for bufferbloat experiment."
 
     def build(self, n=2):
-        # TODO: create two hosts
-		# DONE
-		for i in range(n):
-			self.addHost('h%s' % (i + 1))
-
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
         switch = self.addSwitch('s0')
+        print "Setting %s hosts" % n
+        for i in range(n):
+            host = self.addHost('h%s' % (i + 1))
 
-        # TODO: Add links with appropriate characteristics
+        print "Setting up the link from h1 to switch"
+        # Link from h1 to router. 10Gbs with 5ms delay.
+        # TODO: Do we need the queue size here?
+        delay = args.delay
+        bw_host = args.bw_host
+        bw_net = args.bw_net
+        print "Parameters: delay %s, host bw %s, bottleneck bw %s" % \
+            (delay, bw_host, bw_net) 
+        self.addLink('h1', switch,
+                   bw=bw_host, delay='%sms' % delay, max_queue_size=100)
+        
+        print "Setting up the link from switch to h2"
+        # Link from Router to h2. 1.5Mbs, 5ms delay.
+        # TODO: Again, about about the queue size here?
+        self.addLink(switch, 'h2',
+                   bw=bw_net, delay='%sms' % delay, max_queue_size=100)
         return
+
+# Simple wrappers around monitoring utilities.  You are welcome to
+# contribute neatly written (using classes) monitoring scripts for
+# Mininet!
+def start_tcpprobe(outfile="cwnd.txt"):
+    os.system("rmmod tcp_probe; modprobe tcp_probe full=1;")
+    return
 
 # Simple wrappers around monitoring utilities.  You are welcome to
 # contribute neatly written (using classes) monitoring scripts for
@@ -108,6 +128,12 @@ def start_iperf(net):
     server = h2.popen("iperf -s -w 16m")
     # TODO: Start the iperf client on h1.  Ensure that you create a
     # long lived TCP flow.
+    # Somewhat done I think...
+
+    h1 = net.get('h1')
+    # Sends a 20 second iperf flow.
+    # TODO: Change to more longer flow for better queue size measurement
+    h1.cmd("iperf -t 20 -c %s" % h2.IP())
 
 def start_webserver(net):
     h1 = net.get('h1')
@@ -119,10 +145,19 @@ def start_ping(net):
     # TODO: Start a ping train from h1 to h2 (or h2 to h1, does it
     # matter?)  Measure RTTs every 0.1 second.  Read the ping man page
     # to see how to do this.
+    # Somewhat done I think...
 
     # Hint: Use host.popen(cmd, shell=True).  If you pass shell=True
     # to popen, you can redirect cmd's output using shell syntax.
     # i.e. ping ... > /path/to/ping.
+    print "Starting ping from h1 to h2, 10 times a sec"
+    h1 = net.get("h1")
+    h2 = net.get("h2")
+    # Stop sending after 200 packets. Which is about 20 seconds.
+    # TODO: May need to change this?
+    h1.popen("ping -c 200 -i 0.1 %s > %s/ping.txt" % (h2.IP(), args.dir),
+        shell=True)
+    return
 
 
 def bufferbloat():
@@ -150,8 +185,11 @@ def bufferbloat():
                       outfile='%s/q.txt' % (args.dir))
 
     # TODO: Start iperf, webservers, etc.
-    # start_iperf(net)
-
+    start_iperf(net)
+    start_ping(net)
+    # TODO: Close the procs...
+    webservers = start_webserver(net)
+    
     # TODO: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
     # command does: curl -o /dev/null -s -w %{time_total} google.com
