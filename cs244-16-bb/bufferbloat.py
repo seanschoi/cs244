@@ -20,6 +20,7 @@ import termcolor as T
 import sys
 import os
 import math
+import numpy as np
 
 # TODO: Don't just read the TODO sections in this code.  Remember that
 # one of the goals of this assignment is for you to learn how to use
@@ -164,7 +165,9 @@ def get_web_measurement(net):
     h2 = net.get('h2')
     results = []
     for i in range(3):
-        results.append(h2.popen('curl -o /dev/null -s -w %%{time_total} %s' % h1.IP).communicate())
+	t = h2.popen('curl -o /dev/null -s -w %%{time_total} %s/http/index.html' % h1.IP()).communicate()[0]
+	#print t
+        results.append(t)
     return results
 
 def bufferbloat():
@@ -216,7 +219,13 @@ def bufferbloat():
         if delta > args.time:
             break
         print "%.1fs left..." % (args.time - delta)
-    print web_download_time
+    #print web_download_time
+    
+    wdt = np.array(web_download_time).astype(np.float)
+    f = open('./web_result.txt', 'w')
+    f.write("Mean of web download: %lf \n" % np.mean(wdt))
+    f.write("Standard deviation: %lf \n" % np.std(wdt))
+    f.close()
     # TODO: compute average (and standard deviation) of the fetch
     # times.  You don't need to plot them.  Just note it in your
     # README and explain.
