@@ -80,20 +80,19 @@ class BBTopo(Topo):
 
         print "Setting up the link from h1 to switch"
         # Link from h1 to router. 10Gbs with 5ms delay.
-        # TODO: Do we need the queue size here?
         delay = args.delay
         bw_host = args.bw_host
         bw_net = args.bw_net
+	maxq = args.maxq
         print "Parameters: delay %s, host bw %s, bottleneck bw %s" % \
             (delay, bw_host, bw_net) 
         self.addLink('h1', switch,
-                   bw=bw_host, delay='%sms' % delay, max_queue_size=100)
+                   bw=bw_host, delay='%sms' % delay, max_queue_size=maxq)
         
         print "Setting up the link from switch to h2"
         # Link from Router to h2. 1.5Mbs, 5ms delay.
-        # TODO: Again, about about the queue size here?
         self.addLink(switch, 'h2',
-                   bw=bw_net, delay='%sms' % delay, max_queue_size=100)
+                   bw=bw_net, delay='%sms' % delay, max_queue_size=maxq)
         return
 
 # Simple wrappers around monitoring utilities.  You are welcome to
@@ -208,6 +207,7 @@ def bufferbloat():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
+    # I think it's done -- Eyal
     web_download_time = []
     start_time = time()
     while True:
@@ -222,13 +222,14 @@ def bufferbloat():
     #print web_download_time
     
     wdt = np.array(web_download_time).astype(np.float)
-    f = open('./web_result.txt', 'w')
+    f = open('./web_result.txt', 'w+')
     f.write("Mean of web download: %lf \n" % np.mean(wdt))
     f.write("Standard deviation: %lf \n" % np.std(wdt))
     f.close()
     # TODO: compute average (and standard deviation) of the fetch
     # times.  You don't need to plot them.  Just note it in your
     # README and explain.
+    # I think it's done, need to add results to readme in a meaningfull way
 
     # Hint: The command below invokes a CLI which you can use to
     # debug.  It allows you to run arbitrary commands inside your
