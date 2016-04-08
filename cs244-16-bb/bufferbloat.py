@@ -222,6 +222,7 @@ def bufferbloat():
     #print web_download_time
     
     wdt = np.array(web_download_time).astype(np.float)
+    # TODO: Move to readme
     f = open('./web_result.txt', 'w+')
     f.write("Mean of web download: %lf \n" % np.mean(wdt))
     f.write("Standard deviation: %lf \n" % np.std(wdt))
