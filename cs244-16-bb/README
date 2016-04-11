@@ -10,6 +10,6 @@ Std: 0.157183
 Question answers:
 1. We can see bufferbloat happend here, in the larger queue we had double the mean delay and a much higher jitter. this happend because tcp keeps on increasing until it fills up the larger buffer since the buffer is large TCP will not know of droped packets so it will send at very high rates, additionaly the large buffer is so large that the latency required to empty it is really large adding latecny to the session. In the smaller buffer TCP congestion avoidence packets are drop more quickly so TCP keeps sending packets at a more manageable rate
 2. txqueuelen = 1000, that means the queue is 1.5MB so 12Mb so a latency 0.12 Sec at worst
-3. 
+3. RTT reported by ping increases as queue size increases. This is makes sense intuitivly, because given a larger queue, we can see that there can be more packets on in the queue, causing the packet to have a longer queue delay. Longer queue delay basically translates to longer RTT, which is shown by the graph. 
 4. The first and obvious option to mitigating this problem is limiting the maximum buffer size alowed for different transmission rates. Another option might be to introduce multiple smaller queues to replace the larger queue and then schedualing the queues in some logic for instance round robin with different priorities for different queues.
 
