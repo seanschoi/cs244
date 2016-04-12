@@ -83,7 +83,7 @@ class BBTopo(Topo):
         delay = args.delay
         bw_host = args.bw_host
         bw_net = args.bw_net
-	    maxq = args.maxq
+        maxq = args.maxq
         time = args.time
         print "Parameters: delay %s, host bw %s, bottleneck bw %s, time %s" % \
             (delay, bw_host, bw_net, time) 
@@ -131,6 +131,7 @@ def start_iperf(net):
     # Sending the iperf flow from h1 to h2 with the given duration
     h1 = net.get('h1')
     time = args.time
+    print "Starting iperf client and tcp flow for %ss" % time
     h1.cmd("iperf -t %s -c %s" % (time, h2.IP()))
 
 def start_webserver(net):
@@ -170,7 +171,6 @@ def bufferbloat():
     dumpNodeConnections(net.hosts)
     # This performs a basic all pairs ping test.
     net.pingAll()
-
     # Start all the monitoring processes
     start_tcpprobe("cwnd.txt")
 
@@ -183,8 +183,11 @@ def bufferbloat():
                       outfile='%s/q.txt' % (args.dir))
 
     # TODO: Start iperf, webservers, etc.
-    start_iperf(net)
-    start_ping(net)
+    iperf_proc = Process(target=start_iperf, args=(net, ))
+    ping_proc = Process(target=start_ping, args=(net, ))
+    iperf_proc.start()
+    ping_proc.start()
+
     # TODO: Close the procs...
     webservers = start_webserver(net)
     
