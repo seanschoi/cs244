@@ -8,7 +8,7 @@ Mean: 1.139333
 Std: 0.157183
 
 Question answers:
-1. We can see bufferbloat happend here, in the larger queue we had double the mean delay and a much higher jitter. this happend because tcp keeps on increasing until it fills up the larger buffer since the buffer is large TCP will not know of droped packets so it will send at very high rates, additionaly the large buffer is so large that the latency required to empty it is really large adding latecny to the session. In the smaller buffer TCP congestion avoidence packets are drop more quickly so TCP keeps sending packets at a more manageable rate
+1. We can see bufferbloat happening here, in the larger queue we had double the mean delay and a much higher jitter. This happened because tcp keeps on increasing the window until it fills up the larger buffer. Since the buffer is large, TCP will not know of dropped packets, so it will send at very high rates. Additionaly the buffer is so large that the latency required to empty it is also really large adding latency to the session. In the smaller buffer, TCP congestion avoidence packets are drop more quickly so TCP keeps sending packets at a more manageable rate
 
 2. txqueuelen = 1000, that means the queue is 1.5MB so 12Mb so a latency 0.12 Sec at worst
 
