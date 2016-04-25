@@ -10,18 +10,22 @@ Controller::Controller( const bool debug )
   : debug_( debug )
 {}
 
+// Start with the best window size that we found
+static int window_size = 13;
+
 /* Get current window size, in datagrams */
 unsigned int Controller::window_size( void )
 {
   /* Default: fixed window size of 100 outstanding datagrams */
-  unsigned int the_window_size = 50;
+  unsigned int the_window_size = 13;
 
   if ( debug_ ) {
     cerr << "At time " << timestamp_ms()
-	 << " window size is " << the_window_size << endl;
+	 << " window size is " << the_window_size
+	 << " real window size is " << the_window_size << endl;
   }
 
-  return the_window_size;
+  return window_size;
 }
 
 /* A datagram was sent */
@@ -57,6 +61,7 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
 	 << ", received @ time " << recv_timestamp_acked << " by receiver's clock)"
 	 << endl;
   }
+    window_size += 1;
 }
 
 /* How long to wait (in milliseconds) if there are no acks

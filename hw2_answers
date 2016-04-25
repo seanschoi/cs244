@@ -1,0 +1,21 @@
+1. Data for varying window size
+size    throughput  predelay    signaldelay     score
+5       1.07        33          108             9.91
+10      1.97        55          155             12.71
+12      2.29        64          177             12.94 
+13      2.44        67          188             12.98    
+14      2.58        71          200             12.90
+15      2.70        75          214             12.62
+20      3.30        96          278             11.87
+25      3.76        118         344             10.93
+30      4.11        142         402             10.22   
+35      4.36        167         454             9.60  
+40      4.54        191         505             8.99
+45      4.68        214         559             8.37
+50      4.80        237         609             7.88  
+
+Maximum throughput occurs at window size 13.
+As for repeatability, the value of throughput often changes by 0.01, but it stays pretty close and the score stay pretty constant.
+
+2. AIMD
+
