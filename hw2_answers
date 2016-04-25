@@ -17,5 +17,22 @@ size    throughput  predelay    signaldelay     score
 Maximum throughput occurs at window size 13.
 As for repeatability, the value of throughput often changes by 0.01, but it stays pretty close and the score stay pretty constant.
 
+* Need a graph for the above data
+
 2. AIMD
+
+I used the additive increase constant of 1
+and the multiplicative decrease constant of 1/2 
+(We can change this.)
+Timeout is set to 70ms
+This gave the following statistics
+
+Throughput: 2.28 
+95th percentile per-packet queuing delay: 84ms
+95th percentile signal delay: 122ms
+Power score: 18.69
+
+This is better than the simple window size metric that were used for part A.
+
+
 

@@ -11,21 +11,21 @@ Controller::Controller( const bool debug )
 {}
 
 // Start with the best window size that we found
-static int window_size = 13;
+unsigned int window_size_val = 13;
 
 /* Get current window size, in datagrams */
 unsigned int Controller::window_size( void )
 {
   /* Default: fixed window size of 100 outstanding datagrams */
-  unsigned int the_window_size = 13;
+  // UNUSED NOW
+  //unsigned int the_window_size = 13;
 
   if ( debug_ ) {
     cerr << "At time " << timestamp_ms()
-	 << " window size is " << the_window_size
-	 << " real window size is " << the_window_size << endl;
+	 << " window size is " << window_size_val << endl;
   }
 
-  return window_size;
+  return window_size_val;
 }
 
 /* A datagram was sent */
@@ -59,14 +59,24 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
 	 << " received ack for datagram " << sequence_number_acked
 	 << " (send @ time " << send_timestamp_acked
 	 << ", received @ time " << recv_timestamp_acked << " by receiver's clock)"
+    << " yo " << recv_timestamp_acked - send_timestamp_acked
 	 << endl;
   }
-    window_size += 1;
+    // Simple AIMD
+    if (timestamp_ack_received - send_timestamp_acked < timeout_ms()) {
+        window_size_val += 1;
+    }
+    else {
+        window_size_val /= 2;
+        if (window_size_val == 0) {
+            window_size_val = 1;
+        }
+    }
 }
 
 /* How long to wait (in milliseconds) if there are no acks
    before sending one more datagram */
 unsigned int Controller::timeout_ms( void )
 {
-  return 1000; /* timeout of one second */
+  return 70; /* timeout of 70 millisecond */
 }
