@@ -66,7 +66,6 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
   }
 #if ALG == 1
     // Simple AIMD
-    //shouldn't this be somwhere else? because this should happen unrelated to RTT or if the packet was recived no? because right now it's really similar to trig
     if (timestamp_ack_received - send_timestamp_acked < timeout_ms()) {
         window_size_val += 1;
     }
@@ -76,21 +75,20 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
             window_size_val = 1;
         }
     }
-#elif ALG == 2 //essentially TIMELY with lambda = beta = 1 and no gradiant (Should I add?) (so not TIMELY)
+#elif ALG == 2
     //delay triggered
     double rtt = timestamp_ack_received - send_timestamp_acked;
-    //taken from TIMELY 
-    double t_low = 0.05; //50 micro-secs
-    double t_high = 0.5; //500 micro-secs
+    double t_low = 50; 
+    double t_high = 70;
     if (rtt < t_low) {
        window_size_val += 1;
     }
     else if (rtt > t_high) {
-    	window_size_val *= t_high / rtt;
-        if (window_size_val == 0) {
+    	window_size_val -= 1;
+        if (window_size_val <= 0) {
             window_size_val = 1;
         } 
-    } //else keep unchanged unless we decide on the gradiant thing
+    } 
 #endif 
 }
 
