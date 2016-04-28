@@ -2,10 +2,17 @@
 
 #include "controller.hh"
 #include "timestamp.hh"
+#include <math.h>
 
-#define ALG 2
+#define ALG 3
 
 using namespace std;
+
+#if ALG == 3
+double old_rtt = 50.0;
+double diff = 0.0;
+int count = 0;
+#endif
 
 /* Default constructor */
 Controller::Controller( const bool debug )
@@ -77,9 +84,9 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
     }
 #elif ALG == 2
     //delay triggered
-    double rtt = timestamp_ack_received - send_timestamp_acked;
-    double t_low = 50; 
-    double t_high = 70;
+    uint64_t rtt = timestamp_ack_received - send_timestamp_acked;
+    uint64_t t_low = 50; 
+    uint64_t t_high = 70;
     if (rtt < t_low) {
        window_size_val += 1;
     }
@@ -88,7 +95,46 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
         if (window_size_val <= 0) {
             window_size_val = 1;
         } 
-    } 
+    }
+    cout << "rtt: " << rtt << " window: " << window_size_val << endl;
+#elif ALG == 3
+    //timely like
+    double rtt = timestamp_ack_received - send_timestamp_acked;
+    double t_low = 50.0;
+    double t_high = 100.0;
+    double new_diff = rtt - old_rtt;
+    //cout << "old rtt: " << old_rtt << " old diff: " << diff;
+    diff = 0.5 * diff + 0.5 * new_diff;
+    double norm_grad = diff / 40.0;
+    old_rtt = rtt;
+    if (rtt < t_low) {
+       window_size_val += 1;
+    }
+    else if (rtt > t_high) {
+        cout << "old window: " << window_size_val;
+        window_size_val *= (1.0 - 0.8 *( 1.0 - t_high/rtt));
+        cout << " new window: " << window_size_val << endl;
+        if (window_size_val <= 0) {
+            window_size_val = 1;
+        }
+    }
+    else if (norm_grad <= 0) {
+    	++count;
+        int N = 1;
+        if (count >= 5) {
+            N = 5;
+        }
+        window_size_val = window_size_val + N;
+    } else {
+    	count = 0;
+        cout << "old window: " << window_size_val;
+	window_size_val *= (1.0 - 0.8 * norm_grad);
+        cout << " new window: " << window_size_val << endl;
+        if (window_size_val <= 0) {
+            window_size_val = 1;
+        } 
+    }
+    //cout << "diff: " << diff << " rtt: " << rtt << " window: " << window_size_val << endl;
 #endif 
 }
 
