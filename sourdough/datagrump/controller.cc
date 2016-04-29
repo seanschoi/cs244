@@ -4,7 +4,7 @@
 #include "timestamp.hh"
 #include <math.h>
 
-#define ALG 3
+#define ALG 4
 
 using namespace std;
 
@@ -19,7 +19,14 @@ double min_rtt = 1000.0;
 double diff = 0.0;
 int count = 0;
 
+#elif ALG == 4
+
+double ssthresh = 1000;
+unsigned int stageVal = 0; // 0 slowstart, 1 congestion avoidance
+unsigned int numTimeouts = 0;
+unsigned int lastWindow = 0;
 #endif
+
 
 /* Default constructor */
 Controller::Controller( const bool debug )
@@ -27,21 +34,16 @@ Controller::Controller( const bool debug )
 {}
 
 // Start with the best window size that we found
-unsigned int window_size_val = 13;
+double window_size_val = 1.0;
 
 /* Get current window size, in datagrams */
 unsigned int Controller::window_size( void )
 {
-  /* Default: fixed window size of 100 outstanding datagrams */
-  // UNUSED NOW
-  //unsigned int the_window_size = 13;
-
   if ( debug_ ) {
     cerr << "At time " << timestamp_ms()
 	 << " window size is " << window_size_val << endl;
   }
-
-  return window_size_val;
+  return (unsigned int) window_size_val;
 }
 
 /* A datagram was sent */
@@ -143,6 +145,51 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
         } 
     }
     //cout << "diff: " << diff << " rtt: " << rtt << " window: " << window_size_val << endl;
+
+#elif ALG == 4
+    // In slow start
+    double rtt = timestamp_ack_received - send_timestamp_acked;
+    //cout << rtt << " " << stageVal << " " <<window_size_val << " " << ssthresh << endl;
+    if (stageVal == 0) {
+        // Timeout happened
+        if (rtt >= timeout_ms() && lastWindow == 0) {
+            stageVal = 0;
+            lastWindow = window_size_val;
+            numTimeouts += 1;
+            ssthresh = window_size_val / 2;
+            window_size_val = ssthresh + 3;
+        }
+        else if (rtt >= timeout_ms() && lastWindow >= numTimeouts) {
+            numTimeouts = 0;
+            lastWindow = 0;
+        }
+        // Move to congestion avoidance
+        else if (window_size_val > ssthresh) {
+            window_size_val += (1/window_size_val);
+            stageVal = 1;
+        }
+        // Still in slow start
+        else {
+            window_size_val += 1;
+        }
+    }
+    else {
+        // Timeout happened
+        if (rtt >= timeout_ms() && lastWindow == 0) {
+            stageVal = 0;
+            lastWindow = window_size_val;
+            numTimeouts += 1;
+            ssthresh = window_size_val / 2;
+            window_size_val = ssthresh + 3;
+        }
+        else if (rtt >= timeout_ms() && lastWindow >= numTimeouts) {
+            numTimeouts = 0;
+            lastWindow = 0;
+        }
+        // Still in congestion avoidance
+        window_size_val += 1/window_size_val;
+    }
+
 #endif 
 }
 
@@ -150,5 +197,5 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
    before sending one more datagram */
 unsigned int Controller::timeout_ms( void )
 {
-  return 70; /* timeout of 70 millisecond */
+  return 100; /* timeout of 70 millisecond */
 }
