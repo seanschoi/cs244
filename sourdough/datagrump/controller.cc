@@ -24,7 +24,7 @@ int count = 0;
 double ssthresh = 1000;
 unsigned int stageVal = 0; // 0 slowstart, 1 congestion avoidance
 unsigned int numTimeouts = 0;
-unsigned int lastWindow = 0;
+double lastWindow = 0;
 #endif
 
 
@@ -34,7 +34,7 @@ Controller::Controller( const bool debug )
 {}
 
 // Start with the best window size that we found
-double window_size_val = 1.0;
+double window_size_val = 13.0;
 
 /* Get current window size, in datagrams */
 unsigned int Controller::window_size( void )
@@ -149,7 +149,6 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
 #elif ALG == 4
     // In slow start
     double rtt = timestamp_ack_received - send_timestamp_acked;
-    //cout << rtt << " " << stageVal << " " <<window_size_val << " " << ssthresh << endl;
     if (stageVal == 0) {
         // Timeout happened
         if (rtt >= timeout_ms() && lastWindow == 0) {
@@ -159,9 +158,12 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
             ssthresh = window_size_val / 2;
             window_size_val = ssthresh + 3;
         }
-        else if (rtt >= timeout_ms() && lastWindow >= numTimeouts) {
+        else if (rtt >= timeout_ms() && lastWindow/1.5 <= numTimeouts && numTimeouts != 0) {
             numTimeouts = 0;
             lastWindow = 0;
+        }
+        else if (rtt >= timeout_ms()) {
+            numTimeouts += 1;
         }
         // Move to congestion avoidance
         else if (window_size_val > ssthresh) {
@@ -170,7 +172,7 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
         }
         // Still in slow start
         else {
-            window_size_val += 1;
+            window_size_val += 2;
         }
     }
     else {
@@ -182,13 +184,17 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
             ssthresh = window_size_val / 2;
             window_size_val = ssthresh + 3;
         }
-        else if (rtt >= timeout_ms() && lastWindow >= numTimeouts) {
+        else if (rtt >= timeout_ms() && lastWindow/1.5 <= numTimeouts && numTimeouts != 0) {
             numTimeouts = 0;
             lastWindow = 0;
+        }
+        else if (rtt >= timeout_ms()) {
+            numTimeouts += 1;
         }
         // Still in congestion avoidance
         window_size_val += 1/window_size_val;
     }
+    //cout << rtt << " " << stageVal << " " <<window_size_val <<  " " << lastWindow << " " << numTimeouts <<  " " << ssthresh << endl;
 
 #endif 
 }
@@ -197,5 +203,5 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
    before sending one more datagram */
 unsigned int Controller::timeout_ms( void )
 {
-  return 100; /* timeout of 70 millisecond */
+  return 90; /* timeout of 70 millisecond */
 }
