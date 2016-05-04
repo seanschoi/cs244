@@ -41,6 +41,18 @@ This table represents the comparison between the number of Openflow install oper
 
 \newpage
 \begin{pb}
-
+Hedera: Dynamic Flow Scheduling for Data Center Networks
 \end{pb}
+
+The rise of big data computing in data centers and the increased size and complexity of the data center has caused many  application to be bottlenecked in the network. Traditionally most data center networks were designed as hierarchical trees. To accommodate growth networks are increased horizontally rather than vertically and new topologies are built as multi rooted trees that include many redundant paths between nodes. A flow scheduler is needed in order to fully utilize all the multipaths is the network. The commonly used scheduler ECMP statically determines the path for each flow using a hashing scheme, the issue with this is that occasionally a hash collision might happen causing a loss in throughput. 
+
+To deal with this the authors present a dynamic flow scheduler called Hedera. When a flow through a switch become large enough a central scheduler is updated. The scheduler then tries to math flows to non-conflicting paths and updates the switches. The scheduler uses Global First Fit and Simulated Annealing as heuristics to solve the NP complete problem finding flow routes in a general network while not exceeding the capacity of any links. Global First Fit simply places a large flow on the first available link the scheduler finds. Simulated Annealing forwards all of the flows to a specific host through a specific switch assigned to that host, the scheduler searches for the optimal solution under this constraint. 
+
+The goal of our project will be to replicate the results of these to heuristics and if time permits try another heuristic not tested by the authors. We would like to get a figure similar to figure 9 in the paper:
+
+\begin{figure}[H]
+\includegraphics[width=16cm]{figure_9}
+\centering
+\end{figure}
+
 \end{document}

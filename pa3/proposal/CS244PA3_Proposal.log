@@ -1,7 +1,6 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  3 MAY 2016 18:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  3 MAY 2016 19:07
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **CS244PA3_Proposal.tex
 (./CS244PA3_Proposal.tex
@@ -297,24 +296,30 @@ Package pdftex.def Info: table.png used on input line 36.
 Non-PDF special ignored!
 
 {/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./table
-.png>] [2] (./CS244PA3_Proposal.aux) ) 
+.png>] <figure_9.png, id=13, 1324.95pt x 632.3625pt>
+File: figure_9.png Graphic file (type png)
+
+<use figure_9.png>
+Package pdftex.def Info: figure_9.png used on input line 54.
+(pdftex.def)             Requested size: 455.24408pt x 217.26793pt.
+ [2 <./figure_9.png>] (./CS244PA3_Proposal.aux) ) 
 Here is how much of TeX's memory you used:
- 2932 strings out of 493089
- 39697 string characters out of 6134842
+ 2937 strings out of 493089
+ 39776 string characters out of 6134842
  107832 words of memory out of 5000000
- 6388 multiletter control sequences out of 15000+600000
+ 6392 multiletter control sequences out of 15000+600000
  4901 words of font info for 18 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,6n,32p,621b,222s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2015/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmti10.pfb>
-Output written on CS244PA3_Proposal.pdf (2 pages, 199680 bytes).
+ 42i,6n,32p,746b,222s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2015/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2015/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on CS244PA3_Proposal.pdf (2 pages, 244856 bytes).
 PDF statistics:
- 30 PDF objects out of 1000 (max. 8388607)
+ 31 PDF objects out of 1000 (max. 8388607)
  19 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
