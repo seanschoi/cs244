@@ -289,6 +289,7 @@ function oftest {
     cd ~/
     git clone git://github.com/floodlight/oftest
     cd oftest
+    git checkout oft-1.1
     cd tools/munger
     sudo make install
 }
@@ -299,7 +300,7 @@ function cbench {
     
     sudo apt-get install -y libsnmp-dev libpcap-dev libconfig-dev
     cd ~/
-    git clone git://openflow.org/oflops.git
+    git clone git://github.com/mininet/oflops.git
     cd oflops
     sh boot.sh || true # possible error in autoreconf, so run twice
     sh boot.sh
@@ -419,6 +420,8 @@ function usage {
     printf -- ' -v: install open (V)switch\n' >&2
     printf -- ' -w: install OpenFlow (w)ireshark dissector\n' >&2
     printf -- ' -x: install NO(X) OpenFlow controller\n' >&2
+    printf -- ' -o: install OFTest\n' >&2
+    printf -- ' -e: install CBench\n' >&2
     printf -- ' -y: install (A)ll packages\n' >&2    
     
     exit 2
@@ -428,7 +431,7 @@ if [ $# -eq 0 ]
 then
     all
 else
-    while getopts 'abcdfhkmntvwx' OPTION
+    while getopts 'abcdfhkmntvwxoe' OPTION
     do
       case $OPTION in
       a)    all;;
@@ -444,6 +447,8 @@ else
       v)    ovs;;
       w)    wireshark;;
       x)    nox;;
+      o)    oftest;;
+      e)    cbench;;
       ?)    usage;;
       esac
     done
