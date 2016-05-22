@@ -28,7 +28,8 @@
 # Topologies                                                                   #
 ################################################################################
 
-from mininet.topo import Topo, Node
+from mininet.topo import Topo
+from mininet.node import Node, Switch
 import networkx as nx
 
 class NXTopo(nx.Graph):
@@ -117,29 +118,32 @@ class NXTopo(nx.Graph):
         return H
 
     def finalize(self):
+        if self.finalized:
+            return
         # make mininet topo
         topo = Topo()
+        nodes = {}
         
         # add nodes
         for x,d in self.nodes(data=True):
-            topo.add_node(x,Node(is_switch=d['isSwitch']))
+            if d['isSwitch']:
+                topo.addSwitch(str(x))
+            else:
+                topo.addHost(str(x))
                 
         # add links
         for src,dst in self.edges():
-            topo.add_edge(src,dst)
-            
+            topo.addLink(str(src), str(dst))
+
         # backpatch ports into original graph
         for x in self.nodes():
             self.node[x]['ports'] = {}
             self.node[x]['port'] = {}            
             for y in self.neighbors(x):
-                x_port, y_port = topo.port(x,y)
+                x_port, y_port = topo.port(str(x),str(y))
                 self.node[x]['ports'][y] = x_port
-                # Support indexing in by port to get neighbor switch/port                
                 self.node[x]['port'][x_port] = (y, y_port)
 
-        
-        topo.enable_all()
         self.topo = topo        
         self.finalized = True
 
