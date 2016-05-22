@@ -35,8 +35,8 @@ import sys
 from multiprocessing import Process, Queue
 from multiprocessing.connection import Client,Listener
 from mininet.log import lg, output
-from mininet.net import Mininet
-from mininet.node import UserSwitch, NOX, RemoteController
+from mininet.net import init, Mininet
+from mininet.node import UserSwitch, NOX
 from mininet.cli import CLI
 # import yappi
 import string
@@ -142,7 +142,13 @@ def execute(module,
     wait.daemon = True
     wait.start()
 
-    # Ignore this
+    # if experiment_mode:
+    #     update_application = get_function_by_name(module, function)
+    #     initial_topology = get_function_by_name(topology_module, topology)
+    #     setup = get_function_by_name("update_lib", "setup")
+    #     inst = DummyComponent(args, update_application, setup, initial_topology)
+    #     os._exit(0)
+        
     if experiment_mode:
         # yappi.start()
         nox = Process(target=run_nox)
@@ -183,7 +189,7 @@ def execute(module,
         global mininet
         topo = get_function_by_name(topology_module, topology)(nodes).mininet_topo()
         mininet = Mininet( topo=topo, switch=UserSwitch,
-                           controller=lambda name: RemoteController(name, '127.0.0.1'),
+                           controller=lambda name: NOX(name, "UpdateApp"),
                            xterms=False, autoSetMacs=True, autoStaticArp=True )
         mininet.start()
         lg.setLogLevel('output')
