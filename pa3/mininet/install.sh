@@ -431,7 +431,7 @@ if [ $# -eq 0 ]
 then
     all
 else
-    while getopts 'abcdfhkmntvwxoe' OPTION
+    while getopts 'abcdfhkmntvwxoez' OPTION
     do
       case $OPTION in
       a)    all;;
@@ -449,6 +449,7 @@ else
       x)    nox;;
       o)    oftest;;
       e)    cbench;;
+      z)    other;;
       ?)    usage;;
       esac
     done
