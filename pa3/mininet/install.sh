@@ -259,8 +259,9 @@ function nox {
     #git checkout -b destiny remotes/origin/destiny
 
     # Apply patches
-    git checkout -b tutorial-destiny
-    git am ~/mininet/util/nox-patches/*.patch
+    #git checkout -b tutorial-destiny
+    #git am ~/mininet/util/nox-patches/*.patch
+    git checkout ec26cd9936a559c61cf46614c0c45584b6af7ee5
 
     # Build
     ./boot.sh

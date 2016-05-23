@@ -88,7 +88,7 @@ topologies = [ topology1,
 def run_version(version, cont, update_mechanism, flavor, ext, subspace, island, graph):
     topology1, topology2 = topologies[flavor](version, graph)
     policy = policies[version](topology1, topology2)
-    print "Updating to %s" % version
+    #print "Updating to %s" % version
     update_mechanism(topology1, policy, use_extension=ext, use_subspace=subspace, use_island=island)
     cont()
 
