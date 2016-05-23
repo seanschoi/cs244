@@ -32,6 +32,8 @@ import os
 import sys
 from nox.lib.core import *
 from nox.lib.packet.ethernet import ethernet
+# Adding the current path for nox scripts
+sys.path.append(os.environ['NOX_SCRIPT_DIR'])
 import run
 
 # front-end initialization

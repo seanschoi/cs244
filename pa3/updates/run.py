@@ -47,6 +47,7 @@ default_args = []
 default_independent = False
 default_nox_path = "/home/ubuntu/noxcore/build/src/nox_core"
 os.environ["NOX_CORE_DIR"] = "/home/ubuntu/noxcore/build/src/"
+sys.path.append(os.environ['NOX_CORE_DIR'])
 default_verbose = False 
 default_justnox = False
 default_nox_only = False
