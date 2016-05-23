@@ -232,10 +232,6 @@ def install(policy, idle_timeout=openflow.OFP_FLOW_PERMANENT):
             inst.concrete_policy[switch] = defaultdict(lambda:[])
             
         inst.stats.tally_overhead(switch, config)
-        if DEBUG:
-            log.debug("Installing  " + str(len(config)) + " rules on " 
-                      + str(switch))
-	# log.debug("Installing: " + str(config))	
         for rule in config:
             nox_pattern, nox_actions = rule.convert_to_nox_rule()
             install_rule(switch, nox_pattern, nox_actions, rule.priority,
@@ -249,10 +245,6 @@ def uninstall(policy):
     for switch, config in policy:
         if not switch in inst.concrete_policy:
             inst.concrete_policy[switch] = defaultdict(lambda:[])
-        if DEBUG:
-            log.debug("Uninstalling  " + str(len(config)) + " rules on " 
-                      + str(switch))
-	# log.debug("Uninstalling: " + str(config))
         for rule in config:
             priority = inst.installed_priority[switch][rule.pattern]
             delete_rules(switch, rule.pattern.to_dict(), priority)
@@ -265,9 +257,6 @@ def modify_policy(policy, idle_timeout=openflow.OFP_FLOW_PERMANENT):
         if not switch in inst.concrete_policy:
             inst.concrete_policy[switch] = defaultdict(lambda:[])
 
-        if DEBUG:
-            log.debug("Modifying  " + str(len(config)) + " rules on " 
-                      + str(switch))
         for rule in config:
             nox_pattern, nox_actions = rule.convert_to_nox_rule()
             old_priority = inst.installed_priority[switch][rule.pattern]
@@ -596,11 +585,8 @@ def empty_update(topology, new_policy):
     assert not (inst.current_internal_policy or 
                 inst.current_edge_policy or
                 inst.current_abstract_policy)
-    log.debug("Empty update")
     # update stats
     inst.stats.tally_update(new_policy)
-    if DEBUG:
-        log.debug("New policy: \n" + str(new_policy))
         
     # retrieve current version from inst
     current_version = inst.current_version
@@ -627,7 +613,6 @@ def extension_update(topology, new_policy, plus_delta):
     
     # update stats
     inst.stats.tally_update(new_policy)
-    log.debug("Extension update!")
 
     current_version = inst.current_version
     current_priority = inst.current_priority
@@ -645,7 +630,6 @@ def retraction_update(topology, new_policy, minus_delta):
     
     # update stats
     inst.stats.tally_update(new_policy)
-    log.debug("Retraction update!")
 
     current_version = inst.current_version
     current_priority = inst.current_priority
@@ -724,9 +708,6 @@ def subspace_update(topology, new_policy):
     """
     log.info("Fixpoint subspace update")
     inst.stats.tally_update(new_policy)
-    if DEBUG:
-        log.debug("Installing new policy: " + str(new_policy))
-
     old_policy = inst.current_abstract_policy
 
     # Correctness argument:
@@ -764,9 +745,7 @@ def subspace_update(topology, new_policy):
     edge = mods
     while True:
 
-        log.debug("Entering fixpoint")
         remainder, edge = fixpoint(remainder, edge)
-        log.debug("Finished fixpoint")
 
         if (not edge):
             break
@@ -792,9 +771,6 @@ def full_per_packet_update(topology, new_policy, old_version=None):
     """
 
     # update stats
-    log.debug("Full update!")
-    if DEBUG:
-        log.debug("New policy:" + str(new_policy))
     inst.stats.tally_update(new_policy)
 
     # calculate new version and priority
@@ -1134,29 +1110,18 @@ def two_phase_update(topology, update):
     uninstall_edge_policy = minus_edge_policy.pattern_diff(modify_edge_policy)
         
     # (1) install internal policy
-    if DEBUG:
-        log.debug("Installing new internal policy: \n" + str(plus_internal_policy))
     install(plus_internal_policy)
 
     # TODO: Wait for rules to be installed
     # (2) install edge policy
-    if DEBUG:
-        log.debug("Installing new edge policy: \n" + str(install_edge_policy))
     install(install_edge_policy)
-    if DEBUG:
-        log.debug("Modifying old edge policy: \n" + str(modify_edge_policy))
     modify_policy(modify_edge_policy)
 
     # (3) remove old edge policy
-    if DEBUG:
-        log.debug("Uninstalling old edge policy: \n" + str(uninstall_edge_policy))
     uninstall(uninstall_edge_policy)
         
     # TODO: Wait for packets to leave
     # (4) remove old internal policy
-    if DEBUG:
-        log.debug("Uninstalling old internal policy: \n" \
-                  + str(minus_internal_policy))
     uninstall(minus_internal_policy)
 
     # update inst with new data
