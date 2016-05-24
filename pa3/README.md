@@ -48,8 +48,10 @@
 
   `sudo mn -c`
 
-8. Run the following command
+9. Run the following command
 
   `sudo ./run.sh fattree 4 1`
 
-9. IMPORTANT. First run will fail and hang infinitely. If you see that the program hangs after "Application Started" message, simply Ctrl+C and end the program, and rerun the run.sh script.
+10. IMPORTANT. First run will fail and hang infinitely. If you see that the program hangs after "Application Started" message, simply Ctrl+C and end the program, and rerun the run.sh script.
+
+11. You will see the results being generated.
