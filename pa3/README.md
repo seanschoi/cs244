@@ -4,7 +4,7 @@
 
 ### Initializing EC2 instance
 
-1. Launch an EC2 instance with Ubuntu 10.04 i386. You can search for it in the list of community AMIs.
+1. Launch an EC2 instance with Ubuntu 10.04 i386. You can search for it in the list of community AMIs. Make sure you run at least M1.medium or the installation will fail with lack of RAM.
 
 2. SSH into the EC2 instance and run the following commands to install the git package (If it does not exist already).
 
