@@ -8,21 +8,27 @@
 
 2. SSH into the EC2 instance and run the following commands to install the git package (If it does not exist already).
 
-  `sudo apt-get update`  
-  `sudo apt-get -y install git-core`
+  ```
+  sudo apt-get update
+  sudo apt-get -y install git-core
+  ```
 
 3. Run the following to get the project repo.
 
-  `cd ~`
-  `git clone https://github.com/yo2seol/cs244`
+  ```
+  cd ~
+  git clone https://github.com/yo2seol/cs244
+  ```
 
 4. Run the following code to install mininet and all other dependencies.
 
-  `cd ~`
-  `tar -xzvf ~/cs244/pa3/mininet/mininet-1.0.0.tar.gz`
-  `mv mininet-1.0.0/ mininet`
-  `cp ~/cs244/pa3/mininet/install.sh ./mininet/util/`
-  `sudo ./mininet/util/install.sh`
+  ```
+  cd ~
+  tar -xzvf ~/cs244/pa3/mininet/mininet-1.0.0.tar.gz
+  mv mininet-1.0.0/ mininet
+  cp ~/cs244/pa3/mininet/install.sh ./mininet/util/
+  sudo ./mininet/util/install.sh
+  ```
 
 5. Go into '~/noxcore/build/src/nox/coreapps/examples' by running
 
