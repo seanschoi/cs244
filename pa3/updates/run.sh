@@ -9,4 +9,4 @@ export LD_PRELOAD=$NOX_CORE_DIR/nox/coreapps/pyrt/.libs/pyrt.so:$NOX_CORE_DIR/li
 export NOX_SCRIPT_DIR=`pwd`
 
 echo $NOX_SCRIPT_DIR
-./run.py -v -n $2 -m $1 $1 $3 none
+./run.py -n $2 -m $1 $1 $3 subspace

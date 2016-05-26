@@ -58,7 +58,7 @@
 
 9. Run the following command
 
-  `sudo ./run.sh fattree 4 none`
+  `sudo ./run.sh fattree 4 1`
 
 Here the run script that we created will set the correct environment variables. `fattree` represents the topology for the experiment that you will run. The second parameter is number of switches that you want to use for the experiment. The third parameter toggles subset optimization on or off. You can see the details of the `run.sh` by looking into the file itself.
 
