@@ -66,4 +66,10 @@ Here the run script that we created will set the correct environment variables. 
 
 11. You will see the results being generated.
 
+12. To run all tests run `./run_tests.sh`. NOTE: might fail do to bug described in 10
+
+13. to run an individual test run:
+
+`sudo ./run <topology>[_multicast] 30 {1 2 3} {none subspace}`
+
 If interested, once can view the README file here `https://github.com/yo2seol/cs244/blob/master/pa3/updates/README` and follow the instructions to install NuSMV for verification checks and also try other different topologies.
