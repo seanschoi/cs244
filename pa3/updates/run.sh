@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run with 'sudo ./run.sh fattree 4 1'
+# Run with 'sudo ./run.sh fattree 4 1 none'
 
 export HOME_DIR=$HOME
 export NOX_CORE_DIR=$HOME_DIR/noxcore/build/src
@@ -9,4 +9,4 @@ export LD_PRELOAD=$NOX_CORE_DIR/nox/coreapps/pyrt/.libs/pyrt.so:$NOX_CORE_DIR/li
 export NOX_SCRIPT_DIR=`pwd`
 
 echo $NOX_SCRIPT_DIR
-./run.py -n $2 -m $1 $1 $3 subspace
+./run.py -n $2 -m $1 $1 $3 $4

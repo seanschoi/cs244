@@ -58,9 +58,9 @@
 
 9. Run the following command
 
-  `sudo ./run.sh fattree 4 1`
+  `sudo ./run.sh fattree 4 1 none`
 
-Here the run script that we created will set the correct environment variables. `fattree` represents the topology for the experiment that you will run. The second parameter is number of switches that you want to use for the experiment. The third parameter toggles subset optimization on or off. You can see the details of the `run.sh` by looking into the file itself.
+Here the run script that we created will set the correct environment variables. `fattree` represents the topology for the experiment that you will run. The second parameter is number of switches that you want to use for the experiment. The third parameter toggles which test you want: 1. Hosts only 2. Routes only 3. Both. The third parameter toggles subset optimization on or off, if you want off write 'none' if you want on write 'subspace'. You can see the details of the `run.sh` by looking into the file itself.
 
 10. IMPORTANT. First run will fail and hang infinitely. If you see that the program hangs after "Application Started" message, simply Ctrl+C and end the program, and rerun the run.sh script.
 
