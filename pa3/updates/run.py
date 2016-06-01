@@ -32,6 +32,7 @@
 import optparse
 import os
 import sys
+from os.path import expanduser
 from multiprocessing import Process, Queue
 from multiprocessing.connection import Client,Listener
 from mininet.log import lg, output
@@ -45,8 +46,8 @@ default_topology = "Topology"
 default_function = "main"
 default_args = []
 default_independent = False
-default_nox_path = "/home/ubuntu/noxcore/build/src/nox_core"
-os.environ["NOX_CORE_DIR"] = "/home/ubuntu/noxcore/build/src/"
+default_nox_path = expanduser("~/noxcore/build/src/nox_core")
+os.environ["NOX_CORE_DIR"] = expanduser("~/noxcore/build/src/")
 sys.path.append(os.environ['NOX_CORE_DIR'])
 default_verbose = False 
 default_justnox = False
